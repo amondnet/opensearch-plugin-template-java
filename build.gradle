@@ -1,6 +1,7 @@
 import org.opensearch.gradle.test.RestIntegTestTask
 
 apply plugin: 'java'
+apply plugin: 'kotlin'
 apply plugin: 'idea'
 apply plugin: 'opensearch.opensearchplugin'
 apply plugin: 'opensearch.yaml-rest-test'
@@ -16,9 +17,9 @@ tasks.register("preparePluginPathDirs") {
     mustRunAfter clean
     doLast {
         def newPath = pathToPlugin.replace(".", "/")
-        mkdir "src/main/java/org/opensearch/$newPath"
-        mkdir "src/test/java/org/opensearch/$newPath"
-        mkdir "src/yamlRestTest/java/org/opensearch/$newPath"
+        mkdir "src/main/kotlin/org/opensearch/$newPath"
+        mkdir "src/test/kotlin/org/opensearch/$newPath"
+        mkdir "src/yamlRestTest/kotlin/org/opensearch/$newPath"
     }
 }
 
@@ -60,7 +61,8 @@ validateNebulaPom.enabled = false
 
 buildscript {
     ext {
-        opensearch_version = System.getProperty("opensearch.version", "2.0.0-SNAPSHOT")
+        opensearch_version = System.getProperty("opensearch.version", "2.1.0")
+        kotlin_version = System.getProperty("kotlin.version", "1.7.10")
     }
 
     repositories {
@@ -72,6 +74,7 @@ buildscript {
 
     dependencies {
         classpath "org.opensearch.gradle:build-tools:${opensearch_version}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
     }
 }
 
@@ -122,3 +125,7 @@ task updateVersion {
     }
 }
 
+sourceSets {
+  main.kotlin.srcDirs += 'src/main/kotlin'
+  main.java.srcDirs += 'src/main/java'
+}
